@@ -359,12 +359,12 @@ export const profile = {
     { name: "YouTube", url: "https://www.youtube.com/@nguyenquanghuy-rcs669" },
   ],
   photos: [
-    PHOTOS.thesisDefense,
     PHOTOS.tsTeam,
     PHOTOS.amchamCeremony,
     PHOTOS.vpbankCeremony1,
     PHOTOS.nineEightCeremony,
     PHOTOS.vdtParty,
+    PHOTOS.thesisDefense,
     PHOTOS.trip,
     PHOTOS.vmo,
   ],
