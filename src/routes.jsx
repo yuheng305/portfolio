@@ -18,6 +18,7 @@ import { schools } from "./data/profile";
 
 export const PATHS = {
   about: "/about",
+  places: "/places",
   study: "/studyprocess",
 };
 

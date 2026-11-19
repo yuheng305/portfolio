@@ -299,7 +299,7 @@ export const schools = {
     stats: [
       { value: GPA, label: "GPA" },
       { value: DEGREE_RANKING, label: "Degree ranking" },
-      { value: "GoPitch", label: "Graduation thesis" },
+      { value: "Honors Program", label: "Computer Science" },
     ],
     thesis: `Graduation thesis: “${thesisProject.name}” (${thesisProject.period}) — ${thesisProject.role}.`,
     coursework: [
@@ -309,6 +309,9 @@ export const schools = {
       "Database Systems",
       "Computer Networks",
       "Software Engineering",
+      "Software Project Management",
+      "Mobile Development",
+      "E-Commerce",
     ],
     campus: [img("campus-hcmut.jpg"), img("campus-hcmut-cse.jpg")],
     achievements: [
@@ -340,11 +343,6 @@ export const profile = {
     "Before that, I interned as a Software Engineer at Trusting Social (eKYC team) and at Viettel Group through the Viettel Digital Talent 2025 program. I enjoy backend engineering, system design and solving hard problems — a habit that started with math olympiads in high school.",
     "I also built and run pWork (pwork.vn), a task management platform used by public organizations in Huế.",
   ],
-  highlights: [
-    { value: GPA, label: `GPA · ${DEGREE_RANKING}` },
-    { value: String(experience.length), label: "Engineering roles" },
-    { value: String(awards.length), label: "Scholarships & awards" },
-  ],
   contact: {
     email: "huydt04@gmail.com",
     phone: "0865706314",
@@ -357,6 +355,7 @@ export const profile = {
     { name: "Facebook", url: "https://www.facebook.com/dratadius.manchel/" },
     { name: "Instagram", url: "https://www.instagram.com/yuheng10092/" },
     { name: "YouTube", url: "https://www.youtube.com/@nguyenquanghuy-rcs669" },
+    { name: "WCA", url: "https://www.worldcubeassociation.org/persons/2017HUYN10" },
   ],
   photos: [
     PHOTOS.tsTeam,

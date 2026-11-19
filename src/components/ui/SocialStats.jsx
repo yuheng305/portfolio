@@ -29,7 +29,7 @@ export default function SocialStats() {
           { value: compact.format(totals.engagements), label: "Likes, comments & shares" },
         ]}
       />
-      <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-600">
+      <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-body">
         {available.map(({ key, label, icon }) => (
           <li key={key} className="flex items-center gap-1.5">
             <FontAwesomeIcon icon={icon} aria-label={label} />
@@ -37,7 +37,7 @@ export default function SocialStats() {
           </li>
         ))}
       </ul>
-      <p className="text-xs text-slate-400">Live · updated {time.format(new Date(updatedAt))}</p>
+      <p className="text-xs text-faint">Live · updated {time.format(new Date(updatedAt))}</p>
     </div>
   );
 }

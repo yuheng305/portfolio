@@ -24,17 +24,17 @@ export default function Projects() {
       <div className="space-y-6">
         {projects.map((p) => (
           <Card key={p.name} title={p.name} extra={p.tag} meta={p.period}>
-            <p className="text-slate-700">{p.description}</p>
+            <p className="text-body">{p.description}</p>
             {p.metrics && <Stats items={p.metrics} />}
             {p.liveStats && <SocialStats />}
             {p.highlights && (
-              <ul className="list-disc space-y-1.5 pl-5 text-slate-700 marker:text-blue-600">
+              <ul className="list-disc space-y-1.5 pl-5 text-body marker:text-accent">
                 {p.highlights.map((h) => (
                   <li key={h}>{h}</li>
                 ))}
               </ul>
             )}
-            <p className="text-sm text-slate-700">
+            <p className="text-sm text-body">
               <span className="font-semibold">Role:</span> {p.role}
             </p>
             <TagList items={p.stack} variant="accent" />

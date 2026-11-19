@@ -52,7 +52,7 @@ export default function Carousel({ images, autoPlay = false, interval = 4000 }) 
           </>
         )}
       </div>
-      {slide.caption && <figcaption className="mt-3 text-center text-sm text-slate-600">{slide.caption}</figcaption>}
+      {slide.caption && <figcaption className="mt-3 text-center text-sm text-body">{slide.caption}</figcaption>}
       {multiple && (
         <div className="mt-3 flex flex-wrap justify-center gap-2">
           {images.map((s, i) => (
@@ -63,7 +63,7 @@ export default function Carousel({ images, autoPlay = false, interval = 4000 }) 
               aria-label={`Go to photo ${i + 1}`}
               aria-current={i === index}
               className={`h-2.5 rounded-full transition-all ${
-                i === index ? "w-6 bg-blue-600" : "w-2.5 bg-slate-300 hover:bg-slate-400"
+                i === index ? "w-6 bg-accent" : "w-2.5 bg-line hover:bg-faint"
               }`}
             />
           ))}

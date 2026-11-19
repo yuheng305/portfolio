@@ -27,13 +27,13 @@ export default function Legal({ page }) {
   const { title, body } = PAGES[page];
   return (
     <Section title={title}>
-      <p className="text-sm text-slate-500">Last updated: {UPDATED}</p>
-      <div className="space-y-4 leading-relaxed text-slate-700">
+      <p className="text-sm text-muted">Last updated: {UPDATED}</p>
+      <div className="space-y-4 leading-relaxed text-body">
         {body.map((p) => (
           <p key={p}>{p}</p>
         ))}
         <p>
-          Contact: <a className="text-blue-600 hover:underline" href={`mailto:${profile.contact.email}`}>{profile.contact.email}</a>
+          Contact: <a className="text-accent hover:underline" href={`mailto:${profile.contact.email}`}>{profile.contact.email}</a>
         </p>
       </div>
     </Section>

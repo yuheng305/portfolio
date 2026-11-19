@@ -6,10 +6,10 @@ import ScrollManager from "../components/layout/ScrollManager";
 // Persistent shell: stays mounted across route changes; only <Outlet /> swaps.
 export default function MainLayout() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
+    <div className="min-h-screen bg-page text-ink">
       <ScrollManager />
       <SideBar />
-      <div className="flex min-h-screen flex-col md:ml-[var(--sidebar-w)]">
+      <div className="flex min-h-screen flex-col transition-[margin] duration-200 md:ml-[var(--sidebar-w)]">
         <Outlet />
         <BottomBar />
       </div>

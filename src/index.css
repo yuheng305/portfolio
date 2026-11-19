@@ -2,11 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme tokens (RGB triplets) consumed by the semantic colours in tailwind.config.js. */
+:root {
+  --c-page: 248 250 252; /* slate-50 */
+  --c-card: 255 255 255;
+  --c-subtle: 241 245 249; /* slate-100 */
+  --c-line: 226 232 240; /* slate-200 */
+  --c-ink: 15 23 42; /* slate-900 */
+  --c-body: 51 65 85; /* slate-700 */
+  --c-muted: 100 116 139; /* slate-500 */
+  --c-faint: 148 163 184; /* slate-400 */
+  --c-accent: 37 99 235; /* blue-600 */
+  --c-accent-soft: 239 246 255; /* blue-50 */
+  --c-inverse: 15 23 42; /* slate-900 */
+  --c-on-inverse: 255 255 255;
+  --c-success: 4 120 87; /* emerald-700 */
+  --c-success-soft: 236 253 245; /* emerald-50 */
+  color-scheme: light;
+}
+
+.dark {
+  --c-page: 2 6 23; /* slate-950 */
+  --c-card: 15 23 42; /* slate-900 */
+  --c-subtle: 30 41 59; /* slate-800 */
+  --c-line: 51 65 85; /* slate-700 */
+  --c-ink: 241 245 249; /* slate-100 */
+  --c-body: 203 213 225; /* slate-300 */
+  --c-muted: 148 163 184; /* slate-400 */
+  --c-faint: 100 116 139; /* slate-500 */
+  --c-accent: 96 165 250; /* blue-400 */
+  --c-accent-soft: 23 37 84; /* blue-950 */
+  --c-inverse: 226 232 240; /* slate-200 */
+  --c-on-inverse: 15 23 42; /* slate-900 */
+  --c-success: 110 231 183; /* emerald-300 */
+  --c-success-soft: 2 44 34; /* emerald-950 */
+  color-scheme: dark;
+}
+
 /* Layout dimensions shared by SideBar, TopBar, MainLayout and anchor scrolling. */
 :root {
   --sidebar-w: max(20vw, 220px);
   --mobile-header-h: 4rem;
   --tabbar-h: 3.5rem;
+}
+
+/* Collapsed desktop sidebar (set on <html> by useSidebar and the boot script in index.html). */
+:root[data-sidebar="collapsed"] {
+  --sidebar-w: 4.5rem;
 }
 
 html {

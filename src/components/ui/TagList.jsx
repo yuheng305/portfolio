@@ -1,7 +1,7 @@
 const VARIANTS = {
-  neutral: "rounded-md bg-slate-100 px-2.5 py-1 text-sm text-slate-700",
-  accent: "rounded-md bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700",
-  pill: "rounded-full bg-slate-200 px-3 py-1 text-sm text-slate-700",
+  neutral: "rounded-md bg-subtle px-2.5 py-1 text-sm text-body",
+  accent: "rounded-md bg-accent-soft px-2.5 py-1 text-xs font-medium text-accent",
+  pill: "rounded-full bg-subtle px-3 py-1 text-sm text-body",
 };
 
 export default function TagList({ items, variant = "neutral" }) {

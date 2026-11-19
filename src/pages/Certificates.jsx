@@ -13,7 +13,7 @@ export default function Certificates() {
             title={c.title}
             extra={[c.issuer, c.date, c.note].filter(Boolean).join(" · ")}
             media={
-              <a href={c.image} target="_blank" rel="noopener noreferrer" className="block bg-slate-100">
+              <a href={c.image} target="_blank" rel="noopener noreferrer" className="block bg-subtle">
                 <img
                   src={c.image}
                   alt={c.title}

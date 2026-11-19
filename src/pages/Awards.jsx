@@ -9,7 +9,7 @@ export default function Awards() {
       <div className="space-y-6">
         {awards.map((a) => (
           <Card key={a.title} title={a.title} extra={a.issuer} meta={a.date}>
-            {a.description && <p className="text-slate-700">{a.description}</p>}
+            {a.description && <p className="text-body">{a.description}</p>}
             {a.images && <Carousel images={a.images} />}
           </Card>
         ))}

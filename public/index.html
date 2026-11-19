@@ -25,6 +25,20 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Nguyen Quang Huy — Portfolio</title>
+    <script>
+      // Apply saved theme and sidebar state before first paint (no flash). Mirrors src/hooks/usePreferences.js.
+      (function () {
+        var root = document.documentElement;
+        try {
+          var theme = localStorage.getItem("theme");
+          var dark = theme ? theme === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          root.classList.toggle("dark", dark);
+          if (localStorage.getItem("sidebar") === "collapsed") root.dataset.sidebar = "collapsed";
+        } catch (e) {
+          root.classList.toggle("dark", window.matchMedia("(prefers-color-scheme: dark)").matches);
+        }
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

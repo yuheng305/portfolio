@@ -8,10 +8,10 @@ export default function SchoolPage({ school }) {
   return (
     <>
       <Section title="Introduction">
-        <p className="text-sm font-medium text-blue-600">{school.period}</p>
-        <p className="text-lg leading-relaxed text-slate-700">{school.intro}</p>
+        <p className="text-sm font-medium text-accent">{school.period}</p>
+        <p className="text-lg leading-relaxed text-body">{school.intro}</p>
         {school.stats && <Stats items={school.stats} />}
-        {school.thesis && <p className="text-slate-700">{school.thesis}</p>}
+        {school.thesis && <p className="text-body">{school.thesis}</p>}
         {school.coursework && <TagList items={school.coursework} variant="pill" />}
         {/* Above the fold: load eagerly. */}
         <div className="grid gap-4 sm:grid-cols-2">

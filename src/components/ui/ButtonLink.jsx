@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
 const VARIANTS = {
-  primary: "bg-slate-900 text-white hover:bg-slate-700",
-  secondary: "border border-slate-300 bg-white text-slate-800 hover:bg-slate-100",
+  primary: "bg-inverse text-on-inverse hover:bg-inverse/85",
+  secondary: "border border-line bg-card text-ink hover:bg-subtle",
 };
 
 // Internal paths render a router <Link>; http(s) URLs open in a new tab.
