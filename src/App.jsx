@@ -1,31 +1,46 @@
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import MainLayout from "./layouts/MainLayout";
+import StudyLayout from "./layouts/StudyLayout";
+import PageContent from "./components/layout/PageContent";
 import About from "./pages/About";
 import StudyProcess from "./pages/StudyProcess";
-import MiddleSchool from "./pages/MiddleSchool";
-import HighSchool from "./pages/HighSchool";
-import University from "./pages/University"
-import Certificates from "./pages/Certificates"
-import Projects from "./pages/Projects"
-import Skills from "./pages/Skills"
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import BottomBar from "./components/BottomBar";
+import Legal from "./pages/Legal";
+import { PATHS, STUDY_PAGES } from "./routes";
 
-const App = () => {
-
+export default function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
-        <Route path="/" element={<About/>}/>
-        <Route path="/about" element={<About/>} />
-        <Route path="/studyprocess" element={<StudyProcess/>} />
-        <Route path="/studyprocess/middleschool" element={<MiddleSchool/>} />
-        <Route path="/studyprocess/highschool" element={<HighSchool/>} />
-        <Route path="/studyprocess/university" element={<University/>} />
-        <Route path="/studyprocess/certificates" element={<Certificates/>} />
-        <Route path="/studyprocess/projects" element={<Projects/>} />
-        <Route path="/studyprocess/skills" element={<Skills/>} />
+        <Route element={<MainLayout />}>
+          <Route index element={<Navigate to={PATHS.about} replace />} />
+          <Route
+            path={PATHS.about}
+            element={
+              <PageContent>
+                <About />
+              </PageContent>
+            }
+          />
+          {["privacy", "terms"].map((page) => (
+            <Route
+              key={page}
+              path={`/${page}`}
+              element={
+                <PageContent>
+                  <Legal page={page} />
+                </PageContent>
+              }
+            />
+          ))}
+          <Route path={PATHS.study} element={<StudyLayout />}>
+            <Route index element={<StudyProcess />} />
+            {STUDY_PAGES.map((page) => (
+              <Route key={page.slug} path={page.slug} element={page.element} />
+            ))}
+          </Route>
+          <Route path="*" element={<Navigate to={PATHS.about} replace />} />
+        </Route>
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
-};
-
-export default App;
+}

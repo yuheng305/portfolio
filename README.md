@@ -1,70 +1,48 @@
-# Getting Started with Create React App
+# Nguyen Quang Huy — Portfolio
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Personal portfolio built with React 18, React Router 6 and Tailwind CSS (Create React App).
 
-## Available Scripts
+## Run
 
-In the project directory, you can run:
+```bash
+npm install
+npm start        # http://localhost:3000
+npm run build    # production build in ./build
+```
 
-### `npm start`
+## Structure
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```
+src/
+  data/profile.js        # ALL content (about, experience, awards, certificates, projects, skills, schools)
+  layouts/               # MainLayout (sidebar + footer, persistent) and StudyLayout (tab bar)
+  components/layout/     # SideBar, TopBar, BottomBar
+  components/ui/         # Section, Stats, Card, TagList, Carousel
+  hooks/                 # useCarousel, useScrollOnNavigate
+  pages/                 # route pages; render data only
+public/images/           # optimized photos (max 1600px)
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+To update the portfolio, edit `src/data/profile.js` and drop images into `public/images/`.
 
-### `npm test`
+## Live channel stats (`/api/social-stats`)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The "Giải Mã Toán Olympic" project card shows live followers, views and engagements from
+TikTok, YouTube and Facebook. A Vercel serverless function (`api/`) calls the official APIs
+with server-side credentials and caches the result at the edge for 2 minutes; the page polls it
+every 5 minutes. Platforms without credentials are skipped, and the block stays hidden until
+live data arrives (so `npm start`, which doesn't serve `/api`, shows nothing — use `npx vercel dev`).
 
-### `npm run build`
+| Platform | Source | Freshness |
+|---|---|---|
+| YouTube | Data API v3 (`channels`, `playlistItems`, `videos`) with an API key | near real time; subscribers rounded to 3 significant figures |
+| TikTok | Display API v2 (`user/info`, `video/list`) via OAuth | near real time |
+| Facebook | Graph API Page fields (`followers_count`, `/videos` views, likes, comments) | near real time (Page Insights are skipped: Meta refreshes them every 24h) |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Setup — all values go into Vercel → Settings → Environment Variables, never into the code (see `.env.example`):
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. **YouTube:** Google Cloud → enable *YouTube Data API v3* → create an API key restricted to that API → `YOUTUBE_API_KEY`.
+2. **Facebook:** Meta app (use case *Manage everything on your Page*) with `pages_show_list` + `pages_read_engagement`; Graph API Explorer → extend the user token in the Access Token Debugger → take the Page token from `me/accounts` (it does not expire) → `FACEBOOK_ACCESS_TOKEN`; Graph Page ID → `FACEBOOK_PAGE_ID`.
+3. **Redis:** Vercel → Storage/Marketplace → Upstash Redis → connect to the project (adds `KV_REST_API_URL`, `KV_REST_API_TOKEN`).
+4. **TikTok:** developers.tiktok.com app with Login Kit and scopes `user.info.basic`, `user.info.stats`, `video.list`; redirect URI `https://<domain>/api/tiktok/callback` → `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`, `TIKTOK_REDIRECT_URI`; set `ADMIN_SECRET`.
+   After deploying, open `https://<domain>/api/tiktok/login?key=<ADMIN_SECRET>` once and approve. Tokens are stored and rotated in Redis automatically.
