@@ -9,7 +9,9 @@ const PLATFORMS = [
   { key: "facebook", label: "Facebook", icon: faFacebook },
 ];
 
+// Views are large and move fast, so they stay compact (34.2K); followers and engagements are shown exactly (1,024).
 const compact = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
+const exact = new Intl.NumberFormat("en");
 const time = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short" });
 
 // Renders nothing until live numbers arrive, so the card never shows stale or fake figures.
@@ -25,15 +27,15 @@ export default function SocialStats() {
       <Stats
         items={[
           { value: compact.format(totals.views), label: "Total views" },
-          { value: compact.format(totals.followers), label: "Followers" },
-          { value: compact.format(totals.engagements), label: "Likes, comments & shares" },
+          { value: exact.format(totals.followers), label: "Followers" },
+          { value: exact.format(totals.engagements), label: "Likes, comments & shares" },
         ]}
       />
       <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-body">
         {available.map(({ key, label, icon }) => (
           <li key={key} className="flex items-center gap-1.5">
             <FontAwesomeIcon icon={icon} aria-label={label} />
-            {compact.format(platforms[key].followers)} followers · {compact.format(platforms[key].views)} views
+            {exact.format(platforms[key].followers)} followers · {compact.format(platforms[key].views)} views
           </li>
         ))}
       </ul>
