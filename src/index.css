@@ -18,6 +18,10 @@
   --c-on-inverse: 255 255 255;
   --c-success: 4 120 87; /* emerald-700 */
   --c-success-soft: 236 253 245; /* emerald-50 */
+  /* Chart series, one fixed hue per platform (validated colour-blind-safe as a set). */
+  --c-tiktok: 42 120 214;
+  --c-youtube: 235 104 52;
+  --c-facebook: 27 175 122;
   color-scheme: light;
 }
 
@@ -36,6 +40,9 @@
   --c-on-inverse: 15 23 42; /* slate-900 */
   --c-success: 110 231 183; /* emerald-300 */
   --c-success-soft: 2 44 34; /* emerald-950 */
+  --c-tiktok: 57 135 229;
+  --c-youtube: 217 89 38;
+  --c-facebook: 25 158 112;
   color-scheme: dark;
 }
 

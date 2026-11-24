@@ -11,6 +11,7 @@ import { PATHS, STUDY_PAGES } from "./routes";
 
 // The map data is ~160 KB, so the Places page loads on demand.
 const Places = lazy(() => import("./pages/Places"));
+const ChannelStats = lazy(() => import("./pages/ChannelStats"));
 
 export default function App() {
   return (
@@ -32,6 +33,16 @@ export default function App() {
               <PageContent wide>
                 <Suspense fallback={<p className="text-muted">Loading map…</p>}>
                   <Places />
+                </Suspense>
+              </PageContent>
+            }
+          />
+          <Route
+            path={PATHS.channel}
+            element={
+              <PageContent>
+                <Suspense fallback={<p className="text-muted">Loading…</p>}>
+                  <ChannelStats />
                 </Suspense>
               </PageContent>
             }

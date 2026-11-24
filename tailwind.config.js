@@ -24,6 +24,9 @@ module.exports = {
         "on-inverse": token("on-inverse"), // text on inverse
         success: token("success"),
         "success-soft": token("success-soft"),
+        tiktok: token("tiktok"), // chart series
+        youtube: token("youtube"),
+        facebook: token("facebook"),
       },
     },
   },

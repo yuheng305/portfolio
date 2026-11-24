@@ -8,7 +8,9 @@ import Stats from "../components/ui/Stats";
 import TagList from "../components/ui/TagList";
 import Carousel from "../components/ui/Carousel";
 import ButtonLink from "../components/ui/ButtonLink";
+import { Link } from "react-router-dom";
 import { projects } from "../data/profile";
+import { PATHS } from "../routes";
 
 const LINK_ICONS = [
   ["github.com", faGithub],
@@ -27,6 +29,11 @@ export default function Projects() {
             <p className="text-body">{p.description}</p>
             {p.metrics && <Stats items={p.metrics} />}
             {p.liveStats && <SocialStats />}
+            {p.liveStats && (
+              <Link to={PATHS.channel} className="inline-block text-sm font-semibold text-accent hover:underline">
+                Open the channel dashboard →
+              </Link>
+            )}
             {p.highlights && (
               <ul className="list-disc space-y-1.5 pl-5 text-body marker:text-accent">
                 {p.highlights.map((h) => (

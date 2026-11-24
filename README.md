@@ -46,3 +46,16 @@ Setup — all values go into Vercel → Settings → Environment Variables, neve
 3. **Redis:** Vercel → Storage/Marketplace → Upstash Redis → connect to the project (adds `KV_REST_API_URL`, `KV_REST_API_TOKEN`).
 4. **TikTok:** developers.tiktok.com app with Login Kit and scopes `user.info.basic`, `user.info.stats`, `video.list`; redirect URI `https://<domain>/api/tiktok/callback` → `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`, `TIKTOK_REDIRECT_URI`; set `ADMIN_SECRET`.
    After deploying, open `https://<domain>/api/tiktok/login?key=<ADMIN_SECRET>` once and approve. Tokens are stored and rotated in Redis automatically.
+
+## Channel dashboard (`/channel`)
+
+A full page on top of the same endpoint: filter by platform (or all), KPI tiles, a growth chart,
+the platform split, a sortable per-video table and progress toward each monetization program.
+
+- **History:** the platform APIs only return current totals, so `/api/social-stats` (and the daily
+  keepalive cron) keep one snapshot per day (Vietnam time) in the Redis hash `social:daily`. The
+  growth chart starts from the first snapshot.
+- **Monetization:** thresholds live in `src/data/monetization.js`, copied from YouTube Studio → Earn,
+  TikTok Studio → Monetization and Meta Business Suite → Monetization. Subscriber, follower and upload
+  counts are live; qualified Shorts views and watch hours exist only in YouTube Studio, so they are
+  stored with the date they were read. Update `CHECKED_ON` and those values when re-reading.

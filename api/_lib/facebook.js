@@ -20,7 +20,7 @@ export async function getFacebookStats() {
     graph(pageId, { fields: "followers_count" }),
     collectPages(async (after) => {
       const page = await graph(`${pageId}/videos`, {
-        fields: "views,likes.summary(total_count).limit(0),comments.summary(total_count).limit(0)",
+        fields: "title,description,created_time,permalink_url,views,likes.summary(total_count).limit(0),comments.summary(total_count).limit(0)",
         limit: "100",
         ...(after && { after }),
       });
@@ -33,5 +33,13 @@ export async function getFacebookStats() {
     views: sum(videos, (v) => v.views),
     engagements: sum(videos, (v) => v.likes?.summary?.total_count) + sum(videos, (v) => v.comments?.summary?.total_count),
     videos: videos.length,
+    items: videos.map((v) => ({
+      id: v.id,
+      title: v.title || v.description || "",
+      date: v.created_time,
+      url: v.permalink_url ? `https://www.facebook.com${v.permalink_url}` : undefined,
+      views: v.views || 0,
+      engagements: (v.likes?.summary?.total_count || 0) + (v.comments?.summary?.total_count || 0),
+    })),
   };
 }

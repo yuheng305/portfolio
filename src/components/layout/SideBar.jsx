@@ -6,6 +6,7 @@ import {
   faEnvelope,
   faPenToSquare,
   faMapLocationDot,
+  faChartLine,
   faCube,
   faBars,
   faXmark,
@@ -23,6 +24,7 @@ const ROUTE_NAV = [
   { label: "About", icon: faUser, to: PATHS.about },
   { label: "Study Process", icon: faPenToSquare, to: PATHS.study },
   { label: "Places", icon: faMapLocationDot, to: PATHS.places },
+  { label: "Channel Stats", icon: faChartLine, to: PATHS.channel },
 ];
 
 const SOCIAL_ICONS = {

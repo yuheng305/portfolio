@@ -72,7 +72,7 @@ export async function getTikTokStats() {
   );
 
   const videos = await collectPages(async (cursor) => {
-    const { data } = await fetchJSON(`${OPEN_API}/video/list/?fields=id,view_count,like_count,comment_count,share_count`, {
+    const { data } = await fetchJSON(`${OPEN_API}/video/list/?fields=id,title,video_description,create_time,share_url,view_count,like_count,comment_count,share_count`, {
       method: "POST",
       headers: { ...auth, "Content-Type": "application/json" },
       body: JSON.stringify({ max_count: 20, ...(cursor && { cursor }) }),
@@ -86,5 +86,13 @@ export async function getTikTokStats() {
     views: sum(videos, (v) => v.view_count),
     engagements: sum(videos, (v) => v.like_count) + sum(videos, (v) => v.comment_count) + sum(videos, (v) => v.share_count),
     videos: user.video_count,
+    items: videos.map((v) => ({
+      id: v.id,
+      title: v.title || v.video_description || "",
+      date: new Date(v.create_time * 1000).toISOString(),
+      url: v.share_url,
+      views: v.view_count || 0,
+      engagements: (v.like_count || 0) + (v.comment_count || 0) + (v.share_count || 0),
+    })),
   };
 }

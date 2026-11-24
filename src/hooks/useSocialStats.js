@@ -27,8 +27,11 @@ export default function useSocialStats() {
 
     load();
     const id = setInterval(load, REFRESH_MS);
+    // A page opened in a background tab loads as soon as it is shown, not 5 minutes later.
+    document.addEventListener("visibilitychange", load);
     return () => {
       clearInterval(id);
+      document.removeEventListener("visibilitychange", load);
       controller?.abort();
     };
   }, []);
