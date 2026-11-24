@@ -41,11 +41,16 @@ export default function TrendChart({ history, keys, metric, mode }) {
         history.forEach((day, i) => {
           const v = day[key]?.[metric];
           if (v === undefined) return;
+          const backfill = day[key].source === "analytics";
           if (mode === "daily") {
-            const prev = history[i - 1]?.[key]?.[metric];
-            if (prev === undefined) return;
-            points.push({ date: day.date, value: v - prev });
-          } else points.push({ date: day.date, value: v });
+            // A daily change needs the previous calendar day from the same source:
+            // analytics and the live counters count slightly differently.
+            const prev = history[i - 1];
+            const p = prev?.[key];
+            const consecutive = prev && Date.parse(day.date) - Date.parse(prev.date) === 86_400_000;
+            if (!consecutive || p?.[metric] === undefined || (p.source === "analytics") !== backfill) return;
+            points.push({ date: day.date, value: v - p[metric], backfill });
+          } else points.push({ date: day.date, value: v, backfill });
         });
         return { key, points };
       })
@@ -72,14 +77,17 @@ export default function TrendChart({ history, keys, metric, mode }) {
   const ticks = niceTicks(Math.min(0, ...values), Math.max(0, ...values));
   const yMin = ticks[0];
   const yMax = ticks[ticks.length - 1];
-  const x = (date) => M.left + (dates.indexOf(date) / (dates.length - 1)) * innerW;
+  // Time scale, so a missing day leaves a real gap instead of squeezing the axis.
+  const t0 = Date.parse(dates[0]);
+  const span = Date.parse(dates[dates.length - 1]) - t0;
+  const x = (date) => M.left + ((Date.parse(date) - t0) / span) * innerW;
   const y = (v) => M.top + innerH - ((v - yMin) / (yMax - yMin || 1)) * innerH;
 
   const onMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const rel = (e.clientX - rect.left - M.left) / innerW;
-    const idx = Math.round(Math.min(Math.max(rel, 0), 1) * (dates.length - 1));
-    setHover({ date: dates[idx], left: x(dates[idx]) });
+    const px = e.clientX - rect.left + M.left; // the overlay starts at M.left
+    const nearest = dates.reduce((best, d) => (Math.abs(x(d) - px) < Math.abs(x(best) - px) ? d : best), dates[0]);
+    setHover(nearest);
   };
 
   // Direct labels at the line ends, nudged apart so they never overlap.
@@ -91,6 +99,12 @@ export default function TrendChart({ history, keys, metric, mode }) {
   });
 
   const xLabelEvery = Math.ceil(dates.length / Math.max(Math.floor(innerW / 70), 1));
+
+  // Hover stores only the date; its position follows the current scale (metric/mode changes).
+  const hoverDate = hover && dates.includes(hover) ? hover : null;
+  const hoverX = hoverDate && x(hoverDate);
+
+  const hasBackfill = series.some((s) => s.points.some((p) => p.backfill));
 
   return (
     <div ref={boxRef} className="relative">
@@ -110,29 +124,29 @@ export default function TrendChart({ history, keys, metric, mode }) {
             </text>
           ) : null
         )}
-        {series.map((s) => (
-          <polyline
-            key={s.key}
-            fill="none"
-            stroke={platformByKey[s.key].color}
-            strokeWidth="2"
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            points={s.points.map((p) => `${x(p.date)},${y(p.value)}`).join(" ")}
-          />
-        ))}
+        {series.map((s) => {
+          const toPoints = (pts) => pts.map((p) => `${x(p.date)},${y(p.value)}`).join(" ");
+          const live = s.points.filter((p) => !p.backfill);
+          return (
+            <g key={s.key} stroke={platformByKey[s.key].color} fill="none" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round">
+              {/* Backfilled days (and the join to the first live day) are dashed. */}
+              {s.points.some((p) => p.backfill) && <polyline strokeDasharray="4 4" points={toPoints(s.points)} />}
+              {live.length > 1 && <polyline points={toPoints(live)} />}
+            </g>
+          );
+        })}
         {ends.map((e) => (
           <text key={e.key} x={M.left + innerW + 8} y={e.y} dy="0.32em" className="fill-body text-[11px] font-semibold">
             {platformByKey[e.key].label}
           </text>
         ))}
-        {hover && (
+        {hoverDate && (
           <g>
-            <line x1={hover.left} x2={hover.left} y1={M.top} y2={M.top + innerH} className="stroke-faint" strokeWidth="1" />
+            <line x1={hoverX} x2={hoverX} y1={M.top} y2={M.top + innerH} className="stroke-faint" strokeWidth="1" />
             {series.map((s) => {
-              const p = s.points.find((pt) => pt.date === hover.date);
+              const p = s.points.find((pt) => pt.date === hoverDate);
               return p ? (
-                <circle key={s.key} cx={hover.left} cy={y(p.value)} r="4" fill={platformByKey[s.key].color} className="stroke-card" strokeWidth="2" />
+                <circle key={s.key} cx={hoverX} cy={y(p.value)} r="4" fill={platformByKey[s.key].color} className="stroke-card" strokeWidth="2" />
               ) : null;
             })}
           </g>
@@ -147,19 +161,29 @@ export default function TrendChart({ history, keys, metric, mode }) {
           onPointerLeave={() => setHover(null)}
         />
       </svg>
-      {hover && (
+      {hasBackfill && (
+        <p className="mt-2 text-xs text-faint">
+          Dashed: daily figures from each platform's own analytics (TikTok Studio, YouTube Studio, Meta Business Suite),
+          added before live tracking began on 24 Nov. Solid: the live counters. The two can differ slightly; YouTube
+          Analytics, for example, counts more views than the public view counter.
+        </p>
+      )}
+      {hoverDate && (
         <div
           className="pointer-events-none absolute top-2 z-10 min-w-[9rem] rounded-lg border border-line bg-card px-3 py-2 text-xs shadow-lg"
-          style={hover.left > width / 2 ? { right: width - hover.left + 12 } : { left: hover.left + 12 }}
+          style={hoverX > width / 2 ? { right: width - hoverX + 12 } : { left: hoverX + 12 }}
         >
-          <p className="mb-1 text-muted">{shortDate(hover.date)}</p>
+          <p className="mb-1 text-muted">{shortDate(hoverDate)}</p>
           {series.map((s) => {
-            const p = s.points.find((pt) => pt.date === hover.date);
+            const p = s.points.find((pt) => pt.date === hoverDate);
             return p ? (
               <p key={s.key} className="flex items-center gap-2">
                 <span className="inline-block h-0.5 w-3" style={{ background: platformByKey[s.key].color }} />
                 <span className="font-semibold text-ink">{(mode === "daily" && p.value > 0 ? "+" : "") + exact(p.value)}</span>
-                <span className="text-muted">{platformByKey[s.key].label}</span>
+                <span className="text-muted">
+                  {platformByKey[s.key].label}
+                  {p.backfill && " · analytics"}
+                </span>
               </p>
             ) : null;
           })}

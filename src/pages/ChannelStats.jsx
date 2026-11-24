@@ -56,8 +56,12 @@ export default function ChannelStats() {
   const keys = filter === "all" ? available : [filter];
 
   const history = useMemo(() => {
-    const all = stats?.history || [];
-    return range === "all" ? all : all.slice(-Number(range) - (mode === "daily" ? 1 : 0));
+    const all = [...(stats?.history || [])].sort((a, b) => a.date.localeCompare(b.date));
+    if (range === "all" || all.length === 0) return all;
+    // Keep one extra day before the window so "Per day" has a baseline for the first day.
+    const last = Date.parse(all[all.length - 1].date);
+    const from = last - (Number(range) - (mode === "daily" ? 0 : 1)) * 86_400_000;
+    return all.filter((d) => Date.parse(d.date) >= from);
   }, [stats, range, mode]);
 
   if (!stats) {
